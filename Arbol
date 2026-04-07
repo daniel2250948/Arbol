@@ -1,0 +1,51 @@
+#Daniel Esteban Romero Dueñes 2250948
+
+class Nodo:
+  def __init__(self, val):
+    self.val = val
+    self.left = None
+    self.right= None
+
+class Arbol:
+  def __init__(self, val):
+    self.root = Nodo(val)
+
+  def __agregar_recursivo(self, nodo, val):
+        if val < nodo.val:
+            if nodo.left is None:
+                nodo.left = Nodo(val)
+            else:
+                self.__agregar_recursivo(nodo.left, val)
+        else:
+            if nodo.right is None:
+                nodo.right = Nodo(val)
+            else:
+                self.__agregar_recursivo(nodo.right, val)
+
+
+#MENU
+tree = Arbol()
+
+while True:
+  print("\nWELCOME TO THE NEW WORLD :)\n")
+  print("1. Create Tree")
+  print("2. Tree's weight")
+  print("3. Tree's Height")
+  print("4. Tree's order")
+  print("5. Exit")
+
+  option = int(input("Select an option: "))
+
+  match option:
+    case 1:
+      print("Create Tree")
+    case 2:
+      print("Tree's weight")
+    case 3:
+      print("Tree's Height")
+    case 4:
+      print("Tree's order")
+    case 5:
+      break
+    case _:
+      print("Invalid option")
