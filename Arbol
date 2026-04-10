@@ -3,24 +3,77 @@
 class Nodo:
   def __init__(self, val):
     self.val = val
-    self.left = None
-    self.right= None
+    self.father = None #we only let one pointer, in this case the father, since it is the one whichever node has but the root
+
 
 class Arbol:
-  def __init__(self, val):
-    self.root = Nodo(val)
+  def __init__(self):
+    self.root = None
+    self.nodes = [] #Here we're gonna save all the nodes that will be created, so we can make easier certain tasks as the order for example
 
-  def __agregar_recursivo(self, nodo, val):
-        if val < nodo.val:
-            if nodo.left is None:
-                nodo.left = Nodo(val)
-            else:
-                self.__agregar_recursivo(nodo.left, val)
-        else:
-            if nodo.right is None:
-                nodo.right = Nodo(val)
-            else:
-                self.__agregar_recursivo(nodo.right, val)
+
+  def crear_nodo(self, val, father_val=None):
+    node = Nodo(val)
+
+    if self.root is None:
+        self.root = node
+        print("Root created")
+
+    else:
+      found = False
+
+      for n in self.nodes: #Here we're traversing the list, taking one node by one
+        if n.val == father_val: #Here We're identifying if the current node's value match with the one the user is looking foward to setting as father
+          node.father = n #if it does it then we aim the pointer or we set as father that node, so we add the new node
+          print("Node created")
+          found = True
+          break
+
+      if not found:
+        print("Father not found, node not added")
+        return
+
+    self.nodes.append(node) #we save the node we just added in the list
+
+
+  def weight(self):
+    return len(self.nodes)
+
+
+  def height(self):
+    if self.root is None:
+      return 0   #empty tree
+    max_altura = 0
+
+    for nodo in self.nodes:
+      altura = 1   # we count since the root
+      actual = nodo
+
+      while actual.father is not None:
+        altura += 1
+        actual = actual.father
+
+      if altura > max_altura:
+        max_altura = altura
+
+    return max_altura
+
+
+  def orden(self):
+    max_hijos = 0
+
+    for nodo in self.nodes: #we're setting 2 for in this case, so the first for we use it to take that current node and the second to traverse the whole list looking for the ones who have him as father, and so forth
+      hijos = 0
+
+      for otro in self.nodes:
+        if otro.father == nodo: #if the dad of that is the current node we have, we count it
+          hijos += 1
+
+      if hijos > max_hijos: #we do the same process to each node of the list until we finish and we just take the higher number of children a node could have
+        max_hijos = hijos
+
+    return max_hijos
+
 
 
 #MENU
@@ -37,15 +90,32 @@ while True:
   option = int(input("Select an option: "))
 
   match option:
+
     case 1:
-      print("Create Tree")
+      while True:
+        val = input("Node value/data: ")
+
+        if tree.root is None:
+          tree.crear_nodo(val)
+        else:
+          father = input("Father value: ")
+          tree.crear_nodo(val, father)
+
+        continuar = input("Do you want to add another node? (y/n): ").lower()
+        if continuar != "y":
+          break
+
     case 2:
-      print("Tree's weight")
+      print("Weight:", tree.weight())
+
     case 3:
-      print("Tree's Height")
+      print("Height:", tree.height())
+
     case 4:
-      print("Tree's order")
+      print("Order:", tree.orden())
+
     case 5:
       break
+
     case _:
       print("Invalid option")
